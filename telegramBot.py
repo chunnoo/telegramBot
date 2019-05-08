@@ -135,10 +135,11 @@ def formatInput(message):
     for ch in specialList:
         specialChars.add(ch)
     content = re.sub(r"([^a-zæøå\[\]\s])", " [special] ", content)
-    content = re.sub("\n+", "\n", content)
-    content += " [message]\n"
+    content = re.sub("\n+", " ", content)
+    content += " [message]"
     content = re.sub(r" +", " ", content)
-    return content.lower()
+    content = content.lower()
+    return content
 
 def formatOutput(message):
     content = message.lower()
@@ -197,18 +198,20 @@ def responserateCommandHandler(message):
     except:
         bot.send_message(message.chat.id, "Failed to change response rate")
 
-
 @bot.message_handler(func=lambda m: True)
 def responseHandler(message):
+    print(message.chat.type)
     if random.random() < g_responserate:
         try:
-            formatetdInput = formatInput(message.text)
-            print(formatInput)
+            formatedInput = formatInput(message.text)
+            print("input:", formatedInput)
             #bot.send_message(message.chat.id, formatetdInput)
-            output = generateNext2(formatInput(message.text), temperature=g_temperature)
-            print(output)
-            bot.send_message(message.chat.id, formatOutput(output))
-        except:
-            pass
+            output = generateNext2(formatedInput, temperature=g_temperature)
+            print("output:", output)
+            formatedOutput = formatOutput(output)
+            if formatedOutput != "":
+                bot.send_message(message.chat.id, formatedOutput)
+        except Exception as e:
+            print(e)
 
 bot.polling()
