@@ -174,7 +174,7 @@ def formatOutput(message):
     content = re.sub(r"\s*\[exclamationmark\]", "!", content)
     content = re.sub(r"\s*\[comma\]", ",", content)
     content = re.sub(r"\[misc\]", "#", content)
-    content = re.sub(r"\[number\]", str(random.randint(0,10)), content)
+    content = re.sub(r"\[number\]", lambda m: str(random.randint(0,10)), content)
     content = re.sub(r"\[special\]\s*", "#", content)
     return content.split("[message]")[1]
 
